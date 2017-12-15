@@ -4,6 +4,12 @@ trace_file=$1
 
 SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )
 
+error_exit ()
+{
+    echo "$1. Exiting"
+    exit 1
+}
+
 check_dependencies ()
 {
     dpkg -s gawk > /dev/null 2>&1 || error_exit "gawk package is missing. Please install it first (Linux: \"sudo apt-get install gawk\")"
@@ -20,7 +26,7 @@ check_dependencies
 [[ -z $trace_file ]] && usage
 [[ ! -f $trace_file ]] && usage
 
-trace=${trace_file:0:-4}   # remove extension
+trace=`echo $trace_file | rev | cut -c5- | rev`   # remove extension
 siptrace_file=$trace.sipv.siptrace.log
 output_file=$trace.sipv.output.log
 output_no_sip_file=$trace.sipv.output_no_msg.log
